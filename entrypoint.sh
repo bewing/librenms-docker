@@ -113,8 +113,11 @@ mkdir -p ${DATA_PATH}/config \
   ${DATA_PATH}/logs \
   ${DATA_PATH}/monitoring-plugins \
   ${DATA_PATH}/rrd
-rm -f ${LIBRENMS_PATH}/config.d/*
 
+
+if [ ! -z "$(ls -A  -- "${LIBRENMS_PATH}/config.d")" ]; then
+    echo "External configuration detected, bypassing env config"
+else
 echo "Setting LibreNMS configuration..."
 
 # Config : Directories
@@ -209,6 +212,7 @@ if [ ! -z "${LIBRENMS_DISTRIBUTED_POLLER_MEMCACHED_HOST}" -a ! -z "${RRDCACHED_H
 \$config['distributed_poller_memcached_host'] = '${LIBRENMS_DISTRIBUTED_POLLER_MEMCACHED_HOST}';
 \$config['distributed_poller_memcached_port'] = ${LIBRENMS_DISTRIBUTED_POLLER_MEMCACHED_PORT};
 EOL
+fi
 fi
 
  # Fix perms
